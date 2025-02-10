@@ -1,0 +1,48 @@
+{
+    "settings": {
+        "st": "06:00",
+        "in": 150,
+        "po": 6,
+        "start_time": "09:00",
+        "posts_per_day": 8
+    },
+    "100225": [
+        {
+            "time": "16:00",
+            "type": "photo",
+            "content": "AgACAgIAAxkBAAIFwmeori_6HsDaIZLLVg9SeULgFoB9AALC5zEbW0RBScQr_IgcM4pEAQADAgADeAADNgQ"
+        }
+    ],
+    "110225": [
+        {
+            "time": "06:00",
+            "type": "photo",
+            "content": "AgACAgIAAxkBAAIGgGep2z2DurrfU8gQOtTjeJyNvsDfAAIx8zEbZm1RSfNTe_LGgZo-AQADAgADeQADNgQ"
+        },
+        {
+            "time": "09:20",
+            "type": "photo",
+            "content": "AgACAgIAAxkBAAIGgWep2z3efnedQ5zBirY5noNZT_2eAAIy8zEbZm1RSaEVElHflHwOAQADAgADeQADNgQ"
+        },
+        {
+            "time": "12:40",
+            "type": "photo",
+            "content": "AgACAgIAAxkBAAIGgmep2z2JnOgAAet6V1xBwvyH1pBUAAMz8zEbZm1RSfQwsrLQC3YpAQADAgADeAADNgQ"
+        },
+        {
+            "time": "16:00",
+            "type": "text",
+            "content": "dsfadfgsdfhgsfdhsfhfgh"
+        },
+        {
+            "time": "19:20",
+            "type": "photo",
+            "content": "AgACAgIAAxkBAAIGjWep25mba3b98U5zcTh4kmLIB_P-AAI18zEbZm1RSdn1-OY8lUmQAQADAgADeAADNgQ"
+        },
+        {
+            "time": "22:40",
+            "type": "photo",
+            "content": "AgACAgIAAxkBAAIGj2ep26WsuMDsGiW2qhVG90tyMUp_AAI28zEbZm1RSUKuyWqqcA3SAQADAgADeAADNgQ"
+        }
+    ]
+}
