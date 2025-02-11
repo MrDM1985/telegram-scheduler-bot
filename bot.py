@@ -339,27 +339,44 @@ def time_command(update: Update, context: CallbackContext):
 
 
 def post_scheduler(context: CallbackContext):
-    """Функция проверяет запланированные посты и публикует их в нужное время."""
-    now = datetime.datetime.now(TIMEZONE).replace(second=0, microsecond=0)
+    """Функция планировщика: публикует посты и удаляет их после публикации"""
+    now = datetime.datetime.now(TIMEZONE).replace(tzinfo=None)
+    dates_to_remove = []  # Храним даты, у которых все посты удалены
+
     for date, posts in list(planner.items()):
         if date == "settings":
             continue
-        for post in list(posts):  # Используем копию списка, чтобы безопасно удалять элементы
-            post_time = datetime.datetime.strptime(f"{date} {post['time']}", "%d%m%y %H:%M").replace(second=0, microsecond=0)
-            if post_time <= now.replace(tzinfo=None):
-                try:
-                    # Определяем тип контента
-                    if isinstance(post["content"], str):
-                        context.bot.send_message(POST_CHANNEL, f"\n\n{post['content']}")
-                    else:
-                        context.bot.send_photo(POST_CHANNEL, post["content"])
 
-                    # Удаляем опубликованный пост из планировщика
-                    posts.remove(post)
-                    save_planner()
-                    print(f"✅ Опубликован пост на {post_time.strftime('%H:%M %d.%m.%y')}")
+        updated_posts = []
+        for post in posts:
+            post_time = datetime.datetime.strptime(f"{date} {post['time']}", "%d%m%y %H:%M")
+            
+            if post_time <= now:
+                try:
+                    if "photo" in post:
+                        context.bot.send_photo(POST_CHANNEL, post["photo"], caption=post["content"])
+                    elif "video" in post:
+                        context.bot.send_video(POST_CHANNEL, post["video"], caption=post["content"])
+                    else:
+                        context.bot.send_message(POST_CHANNEL, f"📢 Запланированный пост:\n\n{post['content']}")
+                    
+                    print(f"✅ Опубликован пост на {post['time']} {date}")
                 except Exception as e:
-                    print(f"⚠️ Ошибка при публикации поста: {e}")
+                    print(f"❌ Ошибка публикации: {e}")
+            else:
+                updated_posts.append(post)  # Оставляем только посты, которые ещё не нужно публиковать
+
+        if updated_posts:
+            planner[date] = updated_posts
+        else:
+            dates_to_remove.append(date)  # Если все посты удалены, удаляем дату
+
+    # Удаляем даты, у которых больше нет постов
+    for date in dates_to_remove:
+        del planner[date]
+
+    save_planner()
+
 
 
 if __name__ == "__main__":
