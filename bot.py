@@ -358,7 +358,7 @@ def post_scheduler(context: CallbackContext):
                         file = context.bot.get_file(post["content"])
                         file.download("temp_photo.jpg")  # Временное сохранение
                         context.bot.send_photo(POST_CHANNEL, open("temp_photo.jpg", "rb"))
-                    
+
                     elif post["type"] == "video":
                         file = context.bot.get_file(post["content"])
                         file.download("temp_video.mp4")
@@ -368,20 +368,24 @@ def post_scheduler(context: CallbackContext):
                         context.bot.send_message(POST_CHANNEL, f"📢 Запланированный пост:\n\n{post['content']}")
 
                     print(f"✅ Опубликован пост на {post['time']} {date}")
+
                 except Exception as e:
                     print(f"❌ Ошибка публикации: {e}")
-            else:
-                updated_posts.append(post)
 
+            else:
+                updated_posts.append(post)  # Если время поста еще не пришло, оставляем в планировщике
+
+        # Если день полностью очистился от постов, удаляем его
         if updated_posts:
             planner[date] = updated_posts
         else:
-            dates_to_remove.append(date)  # Если все посты удалены, удаляем дату
+            dates_to_remove.append(date)
 
+    # Удаляем пустые дни из JSON
     for date in dates_to_remove:
         del planner[date]
 
-    save_planner()
+    save_planner()  # Сохраняем изменения
 
 
 
