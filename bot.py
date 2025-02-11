@@ -353,13 +353,16 @@ def post_scheduler(context: CallbackContext):
             
             if post_time <= now:
                 try:
+                    # Проверяем, что именно публикуем
                     if "photo" in post:
-                        context.bot.send_photo(POST_CHANNEL, post["photo"], caption=post["content"])
+                        context.bot.send_photo(POST_CHANNEL, post["photo"], caption=post.get("content", ""))
                     elif "video" in post:
-                        context.bot.send_video(POST_CHANNEL, post["video"], caption=post["content"])
-                    else:
+                        context.bot.send_video(POST_CHANNEL, post["video"], caption=post.get("content", ""))
+                    elif "content" in post:
                         context.bot.send_message(POST_CHANNEL, f"📢 Запланированный пост:\n\n{post['content']}")
-                    
+                    else:
+                        print("⚠️ Ошибка: Неподдерживаемый формат поста")
+
                     print(f"✅ Опубликован пост на {post['time']} {date}")
                 except Exception as e:
                     print(f"❌ Ошибка публикации: {e}")
@@ -376,6 +379,7 @@ def post_scheduler(context: CallbackContext):
         del planner[date]
 
     save_planner()
+
 
 
 
