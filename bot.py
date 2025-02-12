@@ -7,6 +7,7 @@ import pytz
 import time
 import threading
 
+
 # 🛠 Конфигурация
 PLANNER_FILE = "planner.json"
 DEFAULT_START_TIME = "06:00"
@@ -193,6 +194,9 @@ def show_schedule(update: Update, context: CallbackContext):
 
 
 def handle_files(update: Update, context: CallbackContext):
+    if context.user_data is None:
+        context.user_data = {}
+
     if "current_day" not in context.user_data:
         update.message.reply_text("Сначала выберите день командой /d DDMM.")
         return
@@ -339,6 +343,7 @@ def time_command(update: Update, context: CallbackContext):
 
 
 def post_scheduler(context: CallbackContext):
+ 
     """Функция планировщика: публикует посты и удаляет их после публикации"""
     now = datetime.datetime.now(TIMEZONE).replace(tzinfo=None)
     dates_to_remove = []  # Храним даты, у которых все посты удалены
@@ -365,7 +370,7 @@ def post_scheduler(context: CallbackContext):
                         context.bot.send_video(POST_CHANNEL, open("temp_video.mp4", "rb"))
 
                     elif post["type"] == "text":
-                        context.bot.send_message(POST_CHANNEL, f"📢 Запланированный пост:\n\n{post['content']}")
+                        context.bot.send_message(POST_CHANNEL, f"\n\n{post['content']}")
 
                     print(f"✅ Опубликован пост на {post['time']} {date}")
 
@@ -384,9 +389,8 @@ def post_scheduler(context: CallbackContext):
     # Удаляем пустые дни из JSON
     for date in dates_to_remove:
         del planner[date]
-
+        
     save_planner()  # Сохраняем изменения
-
 
 
 
